@@ -1,0 +1,54 @@
+diff --git a/Makefile b/Makefile
+index f35c18e..fef5e1c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -297,19 +297,6 @@ $(OBJECTS): Makefile | externals features-info # Makefile dep to rebuild all on
+ 
+ 
+ externals:
+-# Note: The "+" prefix is to let "make" know that it needs to increase the MAKELEVEL env var because
+-# there will be sub-make calls in this script.
+-ifdef BUILD_VERBOSE
+-	+PREP_AWS_SDK=$(S3_SUPPORT) S3_AWSCRT=$(S3_AWSCRT) AWS_LIB_DIR=$(AWS_LIB_DIR) \
+-		AWS_INCLUDE_DIR=$(AWS_INCLUDE_DIR) PREP_MIMALLOC=$(USE_MIMALLOC) \
+-		PREP_UWS=$(ALTHTTPSVC_SUPPORT) PREP_LIBBACKTRACE=$(PREP_LIBBACKTRACE) \
+-		$(EXTERNAL_PATH)/prepare-external.sh
+-else
+-	@+PREP_AWS_SDK=$(S3_SUPPORT) S3_AWSCRT=$(S3_AWSCRT) AWS_LIB_DIR=$(AWS_LIB_DIR) \
+-		AWS_INCLUDE_DIR=$(AWS_INCLUDE_DIR) PREP_MIMALLOC=$(USE_MIMALLOC) \
+-		PREP_UWS=$(ALTHTTPSVC_SUPPORT) PREP_LIBBACKTRACE=$(PREP_LIBBACKTRACE) \
+-		$(EXTERNAL_PATH)/prepare-external.sh
+-endif
+ 
+ 
+ features-info:
+@@ -427,21 +414,21 @@ clean-all: clean clean-externals clean-packaging clean-buildhelpers
+ install: all
+ 	@echo "Installing elbencho..."
+ 
+-	install -p -m u=rwx,g=rx,o=rx $(EXE) $(INST_PATH)/
+-	install -p -m u=rwx,g=rx,o=rx dist/usr/bin/$(EXE_NAME)-chart $(INST_PATH)/
+-	install -p -m u=rwx,g=rx,o=rx dist/usr/bin/$(EXE_NAME)-scan-path $(INST_PATH)/
+-	install -p -m u=rwx,g=rx,o=rx dist/usr/bin/$(EXE_NAME)-summarize-json $(INST_PATH)/
++	install -p -m u=rwx,g=rx,o=rx -D $(EXE) $(INST_PATH)/bin/$(EXE_NAME)
++	install -p -m u=rwx,g=rx,o=rx -D dist/usr/bin/$(EXE_NAME)-chart $(INST_PATH)/bin/$(EXE_NAME)-chart
++	install -p -m u=rwx,g=rx,o=rx -D dist/usr/bin/$(EXE_NAME)-scan-path $(INST_PATH)/bin/$(EXE_NAME)-scan-path
++	install -p -m u=rwx,g=rx,o=rx -D dist/usr/bin/$(EXE_NAME)-summarize-json $(INST_PATH)/bin/$(EXE_NAME)-summarize-json
+ 
+ 	install -p -m u=rwx,g=rx,o=rx -D dist/etc/bash_completion.d/$(EXE_NAME) \
+-		/etc/bash_completion.d/$(EXE_NAME)
++		$(INST_PATH)/share/bash-completion/completions/$(EXE_NAME)
+ 	install -p -m u=rwx,g=rx,o=rx -D dist/etc/bash_completion.d/$(EXE_NAME)-chart \
+-		/etc/bash_completion.d/$(EXE_NAME)-chart
++		$(INST_PATH)/share/bash-completion/completions/$(EXE_NAME)-chart
+ 
+ 	@echo
+ 	@echo "Installing contributed tools..."
+ 
+-	install -p -m u=rwx,g=rx,o=rx contrib/storage_sweep/mtelbencho.sh $(INST_PATH)/
+-	install -p -m u=rwx,g=rx,o=rx contrib/storage_sweep/graph_sweep.sh $(INST_PATH)/
++	install -p -m u=rwx,g=rx,o=rx -D contrib/storage_sweep/mtelbencho.sh $(INST_PATH)/bin/mtelbencho
++	install -p -m u=rwx,g=rx,o=rx -D contrib/storage_sweep/graph_sweep.sh $(INST_PATH)/bin/graph_sweep
+ 
+ 	@echo
+ 	@echo "NOTE: The $(EXE_NAME) executable was installed to $(INST_PATH). The sudo"

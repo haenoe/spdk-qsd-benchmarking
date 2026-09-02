@@ -1,0 +1,5 @@
+.direnv
+.DS_Store
+
+benchmark/results
+benchmark/archive
